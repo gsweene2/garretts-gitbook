@@ -1,5 +1,7 @@
 # Terraform
 
+<!-- toc -->
+
 ## Basics
 
 ## Install providers

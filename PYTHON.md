@@ -1,5 +1,7 @@
 # Python
 
+<!-- toc -->
+
 ## Where are python installations on my mac?
 ```
 # ls /usr/bin/python*

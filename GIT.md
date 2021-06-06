@@ -1,5 +1,7 @@
 # Git
 
+<!-- toc -->
+
 ## Checkout file from another branch
 
 ```

@@ -1,5 +1,7 @@
 # Java
 
+<!-- toc -->
+
 ## Which Java, Version
 
 ```

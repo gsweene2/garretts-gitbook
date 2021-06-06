@@ -1,5 +1,7 @@
 # MySql
 
+<!-- toc -->
+
 ## Local Installation, Start, Connect
 
 Homebrew Install & Upgrade
@@ -64,6 +66,13 @@ create table round_tbl(
 ```
 
 ## Insert Row
+
+### Generic
+```
+INSERT INTO <table>(<col_name>,<col_name>,<col_name>) VALUES (<col_value>,<col_value>,<col_value>);
+```
+
+### Example
 ```
 mysql> INSERT INTO round_tbl(score,course,weather,round_date) VALUES (78,"Oak Hill","Windy",NOW());
 Query OK, 1 row affected, 1 warning (0.03 sec)

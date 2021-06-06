@@ -40,3 +40,43 @@ public class JavaDemoApplication implements CommandLineRunner {
 	}
 }
 ```
+
+## IntelliJ
+
+### Scratch file
+
+File -> New -> Scratch File -> Java
+
+```
+class Scratch {
+    public static void main(String[] args) {
+        System.out.println("Hello world");
+    }
+}
+```
+
+## Java8
+
+### Streams: Filter, Sort, Print
+
+```
+import java.util.ArrayList;
+import java.util.List;
+
+class Scratch {
+    public static void main(String[] args) {
+        List<Integer> myList = new ArrayList<>();
+        myList.add(1);
+        myList.add(13);
+        myList.add(14);
+        myList.add(7);
+        myList.add(5);
+
+        myList
+            .stream()
+            .filter(i -> i < 10)
+            .sorted()
+            .forEach(System.out::println);
+    }
+}
+```

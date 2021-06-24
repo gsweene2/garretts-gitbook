@@ -6,3 +6,5 @@
 * [MySql](MYSQL.md)
 * [Git](GIT.md)
 * [Terraform](TERRAFORM.md)
+* [Vim](VIM.md)
+* [Cards](CARDS.md)

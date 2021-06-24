@@ -4,6 +4,10 @@ For entertainment purposes only :)
 
 <!-- toc -->
 
+## Important Application Rules
+- Chase 5/24: [Chase’s 5/24 rule: Everything you need to know](https://thepointsguy.com/guide/ultimate-guide-chase-5-24-rule/)
+- Citi 1/8, 2/65: [Rules to Know for Citi Credit Card Applications](https://www.asksebby.com/blog/rules-to-know-for-citi-credit-card-applications#:~:text=Citi%201%2F8,apply%20for%20the%20second%20card.)
+
 ## Credit Card Gurus
  - Ask Sebby: [Blog](https://www.asksebby.com/blog)
  - The Credit Shifu: [Youtube Channel](https://www.youtube.com/channel/UCEVXhsR6e3D522BHQj9MlLg)

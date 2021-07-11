@@ -9,4 +9,5 @@
 * [Python](PYTHON.md)
 * [Terraform](TERRAFORM.md)
 * [Vim](VIM.md)
+* [Utilities](UTILITIES.md)
 * [Cards](CARDS.md)

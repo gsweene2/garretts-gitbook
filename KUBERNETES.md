@@ -6,7 +6,7 @@
 
 ## Use kubeadm to configure cluster (Ubuntu)
 
-### Install Packages on all nodes
+### Install Packages (all nodes)
 
 #### Details
 
@@ -84,7 +84,7 @@ echo "[step] disabling automatic updates for kubelet kubeadm kubectl"
 sudo apt-mark hold kubelet kubeadm kubectl
 ```
 
-### Initialize k8s on control plane node & install networking
+### Initialize k8s (control plane node)
 
 ```bash
 #!/bin/bash
@@ -95,10 +95,10 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 ```
 
-### Finally, join worker nodes to cluster
+### Finally, join worker nodes to cluster (worker nodes)
 
 
-#### Part 1: Create token for kubeadm join (on control plane)
+#### Part 1: Create token for kubeadm join (control plane node)
 
 ```bash
 kubeadm token create --print-join-command
@@ -109,7 +109,7 @@ Expected Output:
 kubeadm join 10.0.1.101:6443 --token bac4le.ryigteenwo5l3a0l --discovery-token-ca-cert-hash sha256:2f56a2f1b6b0bca1c3d54f338b7d4d21ef768ef5b01d14ec373b931480310f67
 ```
 
-#### Part 2: Run the command to join workers (on workers)
+#### Part 2: Run the command to join workers (worker nodes)
 
 Note: run with sudo, the above join does not print with sudo
 
@@ -123,7 +123,7 @@ export CONTROL_PLANE_CA_HASH=2f56a2f1b6b0bca1c3d54f338b7d4d21ef768ef5b01d14ec373
 sudo kubeadm join ${CONTROL_PLANE_IP}:${CONTROL_PLANE_PORT} --token ${CONTROL_PLANE_TOKEN} --discovery-token-ca-cert-hash sha256:${CONTROL_PLANE_CA_HASH}
 ```
 
-### Confirm success
+### Confirm success (control plane node)
 
 ```bash
 kubectl get nodes

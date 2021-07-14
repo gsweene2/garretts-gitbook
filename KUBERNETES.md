@@ -24,54 +24,70 @@ Couple notes about the script:
 ```bash
 #!/bin/bash
 
+echo "[step] creating containerd configuration"
 cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
 overlay
 br_netfilter
 EOF
 
+echo "[step] loading overlay and br_netfilter modules"
 sudo modprobe overlay
 sudo modprobe br_netfilter
 
+echo "[step] Setting system configuration for networking, and applying settings"
 cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
 net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 EOF
-
 sudo sysctl --system
 
+echo "[step] Updating packages and installing containerd"
 sudo apt-get update && sudo apt-get install -y containerd
 
+echo "[step] Creating a default configuration file for containerd"
 sudo mkdir -p /etc/containerd
 
+echo "[step] generating a default containerd configuration and save to config.toml"
 sudo containerd config default | sudo tee /etc/containerd/config.toml
 
+echo "[step] restarting containerd"
 sudo systemctl restart containerd
 
-sudo systemctl status containerd
+# To check the containerd status
+# sudo systemctl status containerd
 
+echo "[step] disabling swap"
 sudo swapoff -a
 
+echo "[step] disabling swap in /etc/fstab (affects startup)"
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
+echo "[step] updating packages and installing apt-transport-https, curl"
 sudo apt-get update && sudo apt-get install -y apt-transport-https curl
 
+echo "[step] downloading and adding GPG key"
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 
+echo "[step] adding kubernetes to the repository list"
 cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
 deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 
+echo "[step] updating packages"
 sudo apt-get update
 
+echo "[step] installing kubernetes packages kubelet, kubeadm, kubectl"
 sudo apt-get install -y kubelet=1.21.0-00 kubeadm=1.21.0-00 kubectl=1.21.0-00
 
+echo "[step] disabling automatic updates for kubelet kubeadm kubectl"
 sudo apt-mark hold kubelet kubeadm kubectl
 ```
 
 ### Initialize k8s on control plane node & install networking
 
-```
+```bash
+#!/bin/bash
 sudo kubeadm init --pod-network-cidr 192.168.0.0/16 --kubernetes-version 1.21.0
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -81,24 +97,51 @@ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
 ### Finally, join worker nodes to cluster
 
+
+#### Part 1: Create token for kubeadm join (on control plane)
+
+```bash
+kubeadm token create --print-join-command
 ```
+
+Expected Output:
+```bash
+kubeadm join 10.0.1.101:6443 --token bac4le.ryigteenwo5l3a0l --discovery-token-ca-cert-hash sha256:2f56a2f1b6b0bca1c3d54f338b7d4d21ef768ef5b01d14ec373b931480310f67
+```
+
+#### Part 2: Run the command to join workers (on workers)
+
+Note: run with sudo, the above join does not print with sudo
+
+```bash
+#!/bin/bash
 export CONTROL_PLANE_IP=10.0.1.101
 export CONTROL_PLANE_PORT=6443
-export CONTROL_PLANE_TOKEN=glwblk.vb23jji6aov6mfz3
-export CONTROL_PLANE_CA_HASH=31bff1af7120e48fca3080984c6c4bb8cd6d91465673e4e53cfa281dc3ed23f9
+export CONTROL_PLANE_TOKEN=bac4le.ryigteenwo5l3a0l
+export CONTROL_PLANE_CA_HASH=2f56a2f1b6b0bca1c3d54f338b7d4d21ef768ef5b01d14ec373b931480310f67
 
 sudo kubeadm join ${CONTROL_PLANE_IP}:${CONTROL_PLANE_PORT} --token ${CONTROL_PLANE_TOKEN} --discovery-token-ca-cert-hash sha256:${CONTROL_PLANE_CA_HASH}
 ```
 
+### Confirm success
+
+```bash
+kubectl get nodes
+```
+
+Expected output:
+```bash
+NAME          STATUS   ROLES                  AGE     VERSION
+k8s-control   Ready    control-plane,master   4m56s   v1.21.0
+k8s-worker1   Ready    <none>                 36s     v1.21.0
+k8s-worker2   Ready    <none>                 99s     v1.21.0
+```
+
 ### Delete a node from the cluster
 
-```
-kubectl get nodes
-kubectl drain k8s-worker1
+```bash
 kubectl drain k8s-worker1 --ignore-daemonsets --delete-local-data
-kubectl get nodes
 kubectl delete node k8s-worker1
-kubectl get nodes
 ```
 
 #### Useful things

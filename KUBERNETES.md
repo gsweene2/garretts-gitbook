@@ -165,3 +165,39 @@ error execution phase preflight: [preflight] Some fatal errors occurred:
 In this case, you can use kubeadm to clean up the node.
 
 `kubeadm reset` will run `preflight`, `update-cluster-status`,`remove-etcd-member`, and `cleanup-node`
+
+## Namespaces
+
+- How to create a new namespace in an existing cluster
+- List current namespaces
+- Locate a pod with a specific name and find namespace
+
+### Create Namespace
+
+```
+kubectl create namespace dev
+```
+
+### List Namespaces
+
+```
+kubectl get namespace
+```
+
+And write to file
+
+```
+kubectl get namespace > namespaces.txt
+```
+
+### Find a pod in a specific namespace
+
+```
+kubectl get pods -n <namespace>
+```
+
+### Find a pod in all namespaces
+
+```
+kubectl get pods --all-namespaces
+```
